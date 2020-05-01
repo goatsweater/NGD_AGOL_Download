@@ -230,6 +230,7 @@ for searcher in street_name_searchers:
             uid = group[ngd_uid_field].tolist()[0]
             sql = f"UPDATE {NGD_TBL_NAME} SET {searcher['ngdal_uid_field']}={street_uid}, {searcher['date_field']}=to_date('{date_val}', 'YYYY-MM-DD') WHERE {ngd_uid_field}={uid}"
             stmts.append(sql + END_SQL_STMT)
+
             # name changes also have a source attribute that needs to be updated
             if searcher['grouper'][1] == 'STR_NME':
                 src_side = searcher['grouper'][0][-2:]
@@ -239,6 +240,12 @@ for searcher in street_name_searchers:
                 if name_source_value == -1:
                     name_source_value = 'NGD'
                 sql = f"UPDATE {NGD_TBL_NAME} SET {name_source_field}='{name_source_value}' WHERE {ngd_uid_field}={uid}"
+                stmts.append(sql + END_SQL_STMT)
+
+            # reset EC name UID attributes to trigger a change on their side
+            if searcher['ngdal_uid_field'].startswith('NGD_STR_UID'):
+                ec_field_name = searcher['ngdal_uid_field'].replace('NGD_STR_UID', 'EC_STR_ID')
+                sql = f"UPDATE {NGD_TBL_NAME} SET {ec_field_name}=-1 WHERE {ngd_uid_field}={uid}"
                 stmts.append(sql + END_SQL_STMT)
         else:
             # this is a new street name so it is added to the new geometries workflow
