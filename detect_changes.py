@@ -284,7 +284,7 @@ for index, row in attr_change.iterrows():
         date_val = row[edit_date_field].strftime(sql_date_format)
 
         # don't bother processing if there is no value in the redline layer
-        if red_val and (ngd_val != red_val):
+        if (ngd_val != red_val) and (pd.notna(red_val) | pd.notna(ngd_val)):
             # need to put quotes on string values for the SQL query
             if type(red_val) is str:
                 red_val = f"'{red_val}'"
@@ -314,7 +314,7 @@ for index, row in attr_change.iterrows():
         target_date_field = field_parts[0] + "_DTE"
 
         # don't bother processing if there is no value in the redline layer
-        if (ngd_val != red_val):
+        if (ngd_val != red_val) and (pd.notna(red_val) | pd.notna(ngd_val)):
             # need to put quotes on string values for the SQL query
             if type(red_val) is str:
                 red_val = f"'{red_val}'"
