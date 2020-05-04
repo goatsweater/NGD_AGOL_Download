@@ -314,10 +314,13 @@ for index, row in attr_change.iterrows():
         target_date_field = field_parts[0] + "_DTE"
 
         # don't bother processing if there is no value in the redline layer
-        if red_val and (ngd_val != red_val):
+        if (ngd_val != red_val):
             # need to put quotes on string values for the SQL query
             if type(red_val) is str:
                 red_val = f"'{red_val}'"
+            # -1 values are due to the fillna operation, so set those to NULL
+            if red_val == -1 or red_val == None:
+                red_val = "NULL"
 
             sql = f"UPDATE {NGD_TBL_NAME} SET {fieldname}={red_val}, {target_date_field}=to_date('{date_val}', 'YYYY-MM-DD') WHERE {ngd_uid_field}={uid}"
             stmts.append(sql + END_SQL_STMT)
