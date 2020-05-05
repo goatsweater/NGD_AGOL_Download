@@ -288,6 +288,9 @@ for index, row in attr_change.iterrows():
             # need to put quotes on string values for the SQL query
             if type(red_val) is str:
                 red_val = f"'{red_val}'"
+            # -1 values are due to the fillna operation, so set those to NULL
+            if red_val == -1 or red_val == None:
+                red_val = "NULL"
 
             sql = f"UPDATE {NGD_TBL_NAME} SET {fieldname}={red_val}, {target_date_field}=to_date('{date_val}', 'YYYY-MM-DD') WHERE {ngd_uid_field}={uid}"
             stmts.append(sql + END_SQL_STMT)
