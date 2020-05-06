@@ -274,7 +274,8 @@ print("Looking for changes to address range attributes...")
 # process the fields that set the ATTRBT_DTE field when they change
 target_date_field = 'ATTRBT_DTE'
 print(f"Processing fields that set {target_date_field}.")
-fields = ['SGMNT_SRC', 'STR_CLS_CDE', 'STR_RNK_CDE', 'ADDR_TYP_L', 'ADDR_TYP_R', 'ADDR_PRTY_L', 'ADDR_PRTY_R']
+# 'STR_CLS_CDE', 'STR_RNK_CDE' - fields ignored due to AGOL editor data replication issues
+fields = ['SGMNT_SRC', 'ADDR_TYP_L', 'ADDR_TYP_R', 'ADDR_PRTY_L', 'ADDR_PRTY_R']
 for index, row in attr_change.iterrows():
     uid = row[ngd_uid_field]
 
